@@ -2,13 +2,424 @@
 <html lang="en" data-theme="dark">
 <head>
   <meta charset="UTF-8" />
-  <title>Modern Security Certification Roadmap</title>
+  <title>Security Certification Roadmap</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta
     name="description"
     content="Interactive security certification roadmap inspired by Paul Jerimy, with ratings, rankings, and an AI & ML security track. Community-maintained and open source."
   />
-  <link rel="stylesheet" href="styles.css" />
+  <style>
+    :root {
+      --bg: #050712;
+      --bg-elevated: #111827;
+      --bg-soft: #020617;
+      --text: #f9fafb;
+      --text-muted: #9ca3af;
+      --border-subtle: #1f2937;
+      --accent: #3b82f6;
+      --radius: 8px;
+      --font: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
+        "Segoe UI", sans-serif;
+
+      --track-foundations: #22c55e;
+      --track-blue: #0ea5e9;
+      --track-red: #f97316;
+      --track-appsec: #a855f7;
+      --track-cloud: #38bdf8;
+      --track-management: #facc15;
+      --track-ai: #ec4899;
+    }
+
+    :root[data-theme="light"] {
+      --bg: #f3f4f6;
+      --bg-elevated: #ffffff;
+      --bg-soft: #e5e7eb;
+      --text: #111827;
+      --text-muted: #6b7280;
+      --border-subtle: #d1d5db;
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    /* Header */
+
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 4vw;
+      background: rgba(15, 23, 42, 0.96);
+      border-bottom: 1px solid var(--border-subtle);
+      backdrop-filter: blur(12px);
+    }
+
+    .site-header h1 {
+      margin: 0;
+      font-size: 1.3rem;
+    }
+
+    .site-header p {
+      margin: 4px 0 0;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .header-main {
+      max-width: 640px;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 10px;
+    }
+
+    /* Buttons */
+
+    .btn-primary,
+    .btn-ghost {
+      border-radius: 999px;
+      padding: 7px 14px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      cursor: pointer;
+      border: 1px solid transparent;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #fff;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .btn-primary:hover {
+      opacity: 0.9;
+    }
+
+    .btn-ghost {
+      background: transparent;
+      border-color: var(--border-subtle);
+      color: var(--text);
+    }
+
+    /* Layout */
+
+    .page {
+      padding: 18px 4vw 32px;
+    }
+
+    .intro {
+      max-width: 960px;
+      margin: 0 auto 18px;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+
+    .intro a {
+      color: var(--accent);
+    }
+
+    .intro-note {
+      margin-top: 6px;
+      font-size: 0.85rem;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 2.5fr) minmax(260px, 1fr);
+      gap: 18px;
+      align-items: flex-start;
+    }
+
+    /* Roadmap grid / map */
+
+    .roadmap-section {
+      background: var(--bg-elevated);
+      border-radius: var(--radius);
+      border: 1px solid var(--border-subtle);
+      padding: 14px;
+    }
+
+    .roadmap-header h2 {
+      margin: 0;
+      font-size: 1rem;
+    }
+
+    .roadmap-header p {
+      margin: 4px 0 10px;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .roadmap-grid {
+      display: grid;
+      grid-auto-rows: minmax(70px, auto);
+      column-gap: 4px;
+      row-gap: 4px;
+      margin-bottom: 12px;
+    }
+
+    .grid-cell,
+    .grid-track-header,
+    .grid-level-label {
+      border-radius: 4px;
+      padding: 4px;
+    }
+
+    .grid-track-header {
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-align: center;
+      background: var(--bg-soft);
+      border: 1px solid var(--border-subtle);
+    }
+
+    .grid-level-label {
+      font-size: 0.75rem;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      padding-right: 6px;
+      color: var(--text-muted);
+    }
+
+    .grid-cell {
+      border: 1px dashed rgba(148, 163, 184, 0.3);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cert-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      margin: 2px;
+      padding: 2px 6px;
+      border-radius: 999px;
+      font-size: 0.7rem;
+      font-weight: 500;
+      color: #020617;
+      cursor: pointer;
+      border: 1px solid rgba(15, 23, 42, 0.18);
+      background: #e5e7eb;
+      white-space: nowrap;
+    }
+
+    [data-track="foundations"] .cert-pill {
+      background: var(--track-foundations);
+    }
+
+    [data-track="blue"] .cert-pill {
+      background: var(--track-blue);
+    }
+
+    [data-track="red"] .cert-pill {
+      background: var(--track-red);
+    }
+
+    [data-track="appsec"] .cert-pill {
+      background: var(--track-appsec);
+    }
+
+    [data-track="cloud"] .cert-pill {
+      background: var(--track-cloud);
+    }
+
+    [data-track="management"] .cert-pill {
+      background: var(--track-management);
+    }
+
+    [data-track="ai"] .cert-pill {
+      background: var(--track-ai);
+    }
+
+    .cert-pill small {
+      opacity: 0.9;
+    }
+
+    .cert-pill.is-highlighted {
+      box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px var(--accent);
+    }
+
+    .legend {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      padding-top: 8px;
+      border-top: 1px solid var(--border-subtle);
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .legend ul {
+      list-style: none;
+      padding: 0;
+      margin: 4px 0 0;
+    }
+
+    .legend li {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .legend-swatch {
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+    }
+
+    .legend-foundations {
+      background: var(--track-foundations);
+    }
+    .legend-blue {
+      background: var(--track-blue);
+    }
+    .legend-red {
+      background: var(--track-red);
+    }
+    .legend-appsec {
+      background: var(--track-appsec);
+    }
+    .legend-cloud {
+      background: var(--track-cloud);
+    }
+    .legend-management {
+      background: var(--track-management);
+    }
+    .legend-ai {
+      background: var(--track-ai);
+    }
+
+    /* Sidebar */
+
+    .sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .panel {
+      background: var(--bg-elevated);
+      border-radius: var(--radius);
+      border: 1px solid var(--border-subtle);
+      padding: 12px;
+    }
+
+    .panel.small p {
+      margin: 0;
+    }
+
+    .panel h2 {
+      margin: 0 0 6px;
+      font-size: 0.9rem;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 8px;
+      font-size: 0.78rem;
+    }
+
+    .field span {
+      margin-bottom: 2px;
+      color: var(--text-muted);
+    }
+
+    .field input,
+    .field select {
+      border-radius: 999px;
+      border: 1px solid var(--border-subtle);
+      padding: 5px 9px;
+      font-size: 0.8rem;
+      background: var(--bg-soft);
+      color: var(--text);
+    }
+
+    .helper {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .ranking-list {
+      list-style: decimal;
+      padding-left: 18px;
+      margin: 6px 0 0;
+      font-size: 0.8rem;
+    }
+
+    .ranking-item {
+      margin-bottom: 4px;
+      cursor: pointer;
+    }
+
+    .ranking-item span.name {
+      font-weight: 500;
+    }
+
+    .ranking-item span.meta {
+      color: var(--text-muted);
+      margin-left: 4px;
+    }
+
+    .ranking-item.is-active span.name {
+      color: var(--accent);
+    }
+
+    /* Footer */
+
+    .site-footer {
+      padding: 12px 4vw 18px;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      border-top: 1px solid var(--border-subtle);
+      text-align: center;
+    }
+
+    /* Responsive */
+
+    @media (max-width: 960px) {
+      .layout {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    @media (max-width: 640px) {
+      .site-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 6px;
+      }
+
+      .header-actions {
+        align-self: stretch;
+      }
+
+      .roadmap-grid {
+        font-size: 0.72rem;
+      }
+    }
+  </style>
 </head>
 <body>
   <header class="site-header">
@@ -35,45 +446,66 @@
   <main class="page">
     <section class="intro">
       <p>
-        This is an independent, modernized take on the classic Security Certification
-        Roadmap. Layout and idea are heavily inspired by
-        <a href="https://www.pauljerimy.com/security-certification-roadmap/" target="_blank" rel="noopener noreferrer">
-          Paul Jerimy’s original work
-        </a>,
-        but all ratings and AI additions here are community-maintained and opinionated.
+        This is an independent, modernized take on the classic Security
+        Certification Roadmap. Layout and idea are heavily inspired by
+        <a
+          href="https://www.pauljerimy.com/security-certification-roadmap/"
+          target="_blank"
+          rel="noopener noreferrer"
+          >Paul Jerimy’s original work</a
+        >, but all ratings and AI additions here are community-maintained and
+        opinionated.
       </p>
       <p class="intro-note">
-        Want to add or adjust a certificate? Edit the data in
-        <code>script.js</code> and send a pull request.
+        Want to add or adjust a certificate? Edit the data in the script block
+        at the bottom of this file and send a pull request.
       </p>
     </section>
 
     <section class="layout">
-      <!-- LEFT: big grid “map” -->
       <section class="roadmap-section">
         <div class="roadmap-header">
           <h2>Roadmap Grid</h2>
           <p>
-            Columns = domains • Rows = difficulty • Each box = certification
+            Columns = domains • Rows = difficulty • Each pill = certification
             (click to highlight in the ranking list).
           </p>
         </div>
 
-        <div id="roadmapGrid" class="roadmap-grid">
-          <!-- Grid is built dynamically by script.js -->
-        </div>
+        <div id="roadmapGrid" class="roadmap-grid"></div>
 
         <div class="legend">
           <div>
             <strong>Color Legend</strong>
             <ul>
-              <li><span class="legend-swatch legend-foundations"></span> Core Foundations</li>
-              <li><span class="legend-swatch legend-blue"></span> Blue Team &amp; DFIR</li>
-              <li><span class="legend-swatch legend-red"></span> Red Team &amp; Exploit</li>
-              <li><span class="legend-swatch legend-appsec"></span> AppSec &amp; Code</li>
-              <li><span class="legend-swatch legend-cloud"></span> Cloud &amp; Zero Trust</li>
-              <li><span class="legend-swatch legend-management"></span> GRC &amp; Management</li>
-              <li><span class="legend-swatch legend-ai"></span> AI &amp; ML Security</li>
+              <li>
+                <span class="legend-swatch legend-foundations"></span> Core
+                Foundations
+              </li>
+              <li>
+                <span class="legend-swatch legend-blue"></span> Blue Team &amp;
+                DFIR
+              </li>
+              <li>
+                <span class="legend-swatch legend-red"></span> Red Team &amp;
+                Exploit
+              </li>
+              <li>
+                <span class="legend-swatch legend-appsec"></span> AppSec &amp;
+                Code
+              </li>
+              <li>
+                <span class="legend-swatch legend-cloud"></span> Cloud &amp;
+                Zero Trust
+              </li>
+              <li>
+                <span class="legend-swatch legend-management"></span> GRC &amp;
+                Management
+              </li>
+              <li>
+                <span class="legend-swatch legend-ai"></span> AI &amp; ML
+                Security
+              </li>
             </ul>
           </div>
           <div>
@@ -89,13 +521,16 @@
         </div>
       </section>
 
-      <!-- RIGHT: ranking & filters -->
       <aside class="sidebar">
         <section class="panel">
           <h2>Filters</h2>
           <label class="field">
             <span>Search</span>
-            <input id="searchInput" type="search" placeholder="CISSP, OSCP, AI-900…" />
+            <input
+              id="searchInput"
+              type="search"
+              placeholder="CISSP, OSCP, AI-900…"
+            />
           </label>
 
           <label class="field">
@@ -124,23 +559,23 @@
           </label>
 
           <p class="helper">
-            Ratings are community opinions only, not promises of salary or job offers.
+            Ratings are community opinions only, not promises of salary or job
+            offers.
           </p>
         </section>
 
         <section class="panel">
           <h2>Top Ranked Certifications</h2>
           <p id="rankingSummary" class="helper"></p>
-          <ol id="rankingList" class="ranking-list">
-            <!-- Filled by script.js -->
-          </ol>
+          <ol id="rankingList" class="ranking-list"></ol>
         </section>
 
         <section class="panel small">
           <h2>Contribute</h2>
           <p class="helper">
-            Fork the repo, update the cert data in <code>script.js</code>, and open a PR.
-            Please include an official link and a short note for each new or changed cert.
+            Fork the repo, update the cert data in this file, and open a PR.
+            Please include an official link and a short note for each new or
+            changed cert.
           </p>
         </section>
       </aside>
@@ -149,11 +584,396 @@
 
   <footer class="site-footer">
     <p>
-      This project is not affiliated with Paul Jerimy. Layout idea credit to him; all
-      modifications and AI content released under your chosen open-source license.
+      This project is not affiliated with Paul Jerimy. Layout idea credit to
+      him; all modifications and AI content released under your chosen
+      open-source license.
     </p>
   </footer>
 
-  <script src="script.js"></script>
+  <script>
+    // ----- tracks and levels -----
+    const TRACKS = [
+      { id: "foundations", label: "Core Foundations" },
+      { id: "blue", label: "Blue Team & DFIR" },
+      { id: "red", label: "Red Team & Exploit" },
+      { id: "appsec", label: "AppSec & Code" },
+      { id: "cloud", label: "Cloud & Zero Trust" },
+      { id: "management", label: "GRC & Management" },
+      { id: "ai", label: "AI & ML Security" }
+    ];
+
+    const LEVELS = [
+      { id: "intro", label: "Intro / Fundamentals" },
+      { id: "associate", label: "Associate / Junior" },
+      { id: "intermediate", label: "Intermediate" },
+      { id: "advanced", label: "Advanced" },
+      { id: "expert", label: "Expert" }
+    ];
+
+    // ----- cert data -----
+    const CERTS = [
+      {
+        id: "secplus",
+        name: "CompTIA Security+",
+        provider: "CompTIA",
+        track: "foundations",
+        level: "intro",
+        rating: 4.4,
+        difficulty: 2.5,
+        popularity: 4.8,
+        url: "https://www.comptia.org/certifications/security"
+      },
+      {
+        id: "isc2-cc",
+        name: "ISC2 Certified in Cybersecurity (CC)",
+        provider: "ISC2",
+        track: "foundations",
+        level: "intro",
+        rating: 4.1,
+        difficulty: 2.2,
+        popularity: 4.0,
+        url: "https://www.isc2.org/certifications/cc"
+      },
+      {
+        id: "cysa",
+        name: "CompTIA CySA+",
+        provider: "CompTIA",
+        track: "blue",
+        level: "associate",
+        rating: 4.0,
+        difficulty: 3.0,
+        popularity: 3.8,
+        url: "https://www.comptia.org/certifications/cybersecurity-analyst"
+      },
+      {
+        id: "gcfa",
+        name: "GIAC GCFA",
+        provider: "GIAC",
+        track: "blue",
+        level: "advanced",
+        rating: 4.6,
+        difficulty: 4.5,
+        popularity: 3.6,
+        url: "https://www.giac.org/certifications/forensic-analyst-gcfa/"
+      },
+      {
+        id: "oscp",
+        name: "OSCP",
+        provider: "OffSec",
+        track: "red",
+        level: "intermediate",
+        rating: 4.7,
+        difficulty: 4.4,
+        popularity: 4.9,
+        url: "https://www.offsec.com/certifications/osc-pen-200/"
+      },
+      {
+        id: "htb-cpts",
+        name: "HTB CPTS",
+        provider: "Hack The Box",
+        track: "red",
+        level: "associate",
+        rating: 4.2,
+        difficulty: 3.6,
+        popularity: 3.9,
+        url: "https://academy.hackthebox.com/certifications"
+      },
+      {
+        id: "pdes-devsecops",
+        name: "Certified DevSecOps Professional",
+        provider: "Practical DevSecOps",
+        track: "appsec",
+        level: "intermediate",
+        rating: 4.5,
+        difficulty: 3.7,
+        popularity: 3.7,
+        url: "https://www.practical-devsecops.com/certified-devsecops-professional/"
+      },
+      {
+        id: "aws-security-specialty",
+        name: "AWS Certified Security – Specialty",
+        provider: "AWS",
+        track: "cloud",
+        level: "advanced",
+        rating: 4.4,
+        difficulty: 4.1,
+        popularity: 4.2,
+        url: "https://aws.amazon.com/certification/certified-security-specialty/"
+      },
+      {
+        id: "sc-100",
+        name: "SC-100 Cybersecurity Architect",
+        provider: "Microsoft",
+        track: "cloud",
+        level: "advanced",
+        rating: 4.3,
+        difficulty: 3.8,
+        popularity: 3.9,
+        url: "https://learn.microsoft.com/credentials/certifications/cybersecurity-architect-expert/"
+      },
+      {
+        id: "cissp",
+        name: "CISSP",
+        provider: "ISC2",
+        track: "management",
+        level: "advanced",
+        rating: 4.9,
+        difficulty: 4.3,
+        popularity: 5.0,
+        url: "https://www.isc2.org/certifications/cissp"
+      },
+      {
+        id: "cism",
+        name: "CISM",
+        provider: "ISACA",
+        track: "management",
+        level: "advanced",
+        rating: 4.6,
+        difficulty: 4.0,
+        popularity: 4.5,
+        url: "https://www.isaca.org/credentialing/cism"
+      },
+      {
+        id: "ai-900",
+        name: "AI-900 Azure AI Fundamentals",
+        provider: "Microsoft",
+        track: "ai",
+        level: "intro",
+        rating: 3.9,
+        difficulty: 2.0,
+        popularity: 3.8,
+        url: "https://learn.microsoft.com/credentials/certifications/azure-ai-fundamentals/"
+      },
+      {
+        id: "aws-ml-specialty",
+        name: "AWS Machine Learning – Specialty",
+        provider: "AWS",
+        track: "ai",
+        level: "advanced",
+        rating: 4.3,
+        difficulty: 4.4,
+        popularity: 3.7,
+        url: "https://aws.amazon.com/certification/certified-machine-learning-specialty/"
+      },
+      {
+        id: "pds-ai-sec",
+        name: "Certified AI Security Professional",
+        provider: "Practical DevSecOps",
+        track: "ai",
+        level: "advanced",
+        rating: 4.7,
+        difficulty: 4.2,
+        popularity: 3.5,
+        url: "https://www.practical-devsecops.com/certified-ai-security-professional/"
+      },
+      {
+        id: "isaca-aaism",
+        name: "ISACA AI Security Management",
+        provider: "ISACA",
+        track: "ai",
+        level: "advanced",
+        rating: 4.4,
+        difficulty: 4.0,
+        popularity: 3.4,
+        url: "https://www.isaca.org/credentialing/aaism"
+      }
+    ];
+
+    const state = {
+      search: "",
+      track: "all",
+      minRating: 0,
+      sort: "rating"
+    };
+
+    const gridEl = document.getElementById("roadmapGrid");
+    const rankingListEl = document.getElementById("rankingList");
+    const rankingSummaryEl = document.getElementById("rankingSummary");
+    const searchInput = document.getElementById("searchInput");
+    const trackSelect = document.getElementById("trackSelect");
+    const ratingSelect = document.getElementById("ratingSelect");
+    const sortSelect = document.getElementById("sortSelect");
+    const themeToggle = document.getElementById("themeToggle");
+
+    function buildGridFrame() {
+      gridEl.style.gridTemplateColumns = `minmax(120px, 150px) repeat(${TRACKS.length}, minmax(120px, 1fr))`;
+      gridEl.innerHTML = "";
+
+      const corner = document.createElement("div");
+      corner.className = "grid-level-label";
+      gridEl.appendChild(corner);
+
+      TRACKS.forEach(track => {
+        const header = document.createElement("div");
+        header.className = "grid-track-header";
+        header.textContent = track.label;
+        gridEl.appendChild(header);
+      });
+
+      LEVELS.forEach(level => {
+        const label = document.createElement("div");
+        label.className = "grid-level-label";
+        label.textContent = level.label;
+        gridEl.appendChild(label);
+
+        TRACKS.forEach(track => {
+          const cell = document.createElement("div");
+          cell.className = "grid-cell";
+          cell.dataset.level = level.id;
+          cell.dataset.track = track.id;
+          gridEl.appendChild(cell);
+        });
+      });
+    }
+
+    function placeCerts() {
+      gridEl.querySelectorAll(".cert-pill").forEach(p => p.remove());
+
+      CERTS.forEach(cert => {
+        const cell = gridEl.querySelector(
+          `.grid-cell[data-level="${cert.level}"][data-track="${cert.track}"]`
+        );
+        if (!cell) return;
+
+        const pill = document.createElement("button");
+        pill.type = "button";
+        pill.className = "cert-pill";
+        pill.dataset.certId = cert.id;
+        pill.innerHTML = `
+          <span>${cert.name}</span>
+          <small>(${cert.rating.toFixed(1)}★)</small>
+        `;
+        pill.addEventListener("click", () => highlightFromId(cert.id));
+
+        cell.appendChild(pill);
+      });
+    }
+
+    function getFilteredAndSortedCerts() {
+      const { search, track, minRating, sort } = state;
+
+      let list = CERTS.filter(c => {
+        if (track !== "all" && c.track !== track) return false;
+        if (c.rating < minRating) return false;
+        if (search) {
+          const haystack = `${c.name} ${c.provider}`.toLowerCase();
+          if (!haystack.includes(search.toLowerCase())) return false;
+        }
+        return true;
+      });
+
+      list.sort((a, b) => {
+        if (sort === "difficulty") return a.difficulty - b.difficulty;
+        if (sort === "popularity") return b.popularity - a.popularity;
+        return b.rating - a.rating;
+      });
+
+      return list;
+    }
+
+    function renderRanking() {
+      const list = getFilteredAndSortedCerts();
+      rankingListEl.innerHTML = "";
+
+      list.forEach(cert => {
+        const li = document.createElement("li");
+        li.className = "ranking-item";
+        li.dataset.certId = cert.id;
+        li.innerHTML = `
+          <span class="name">${cert.name}</span>
+          <span class="meta">
+            • ${cert.rating.toFixed(1)}★
+            • diff ${cert.difficulty.toFixed(1)}
+            • pop ${cert.popularity.toFixed(1)}
+          </span>
+        `;
+        li.addEventListener("click", () => highlightFromId(cert.id));
+        rankingListEl.appendChild(li);
+      });
+
+      const total = CERTS.length;
+      const shown = list.length;
+      rankingSummaryEl.textContent =
+        shown === total
+          ? `${shown} certifications listed`
+          : `${shown} of ${total} certifications shown (filters applied)`;
+    }
+
+    function clearHighlights() {
+      document
+        .querySelectorAll(".cert-pill.is-highlighted, .ranking-item.is-active")
+        .forEach(el =>
+          el.classList.remove("is-highlighted", "is-active")
+        );
+    }
+
+    function highlightFromId(certId) {
+      clearHighlights();
+      const pill = document.querySelector(
+        `.cert-pill[data-cert-id="${certId}"]`
+      );
+      const item = document.querySelector(
+        `.ranking-item[data-cert-id="${certId}"]`
+      );
+      if (pill) pill.classList.add("is-highlighted");
+      if (item) item.classList.add("is-active");
+    }
+
+    function initFilters() {
+      trackSelect.innerHTML =
+        '<option value="all">All tracks</option>' +
+        TRACKS.map(t => `<option value="${t.id}">${t.label}</option>`).join("");
+
+      trackSelect.addEventListener("change", e => {
+        state.track = e.target.value;
+        renderRanking();
+      });
+
+      ratingSelect.addEventListener("change", e => {
+        state.minRating = parseFloat(e.target.value);
+        renderRanking();
+      });
+
+      sortSelect.addEventListener("change", e => {
+        state.sort = e.target.value;
+        renderRanking();
+      });
+
+      searchInput.addEventListener("input", e => {
+        state.search = e.target.value.trim();
+        renderRanking();
+      });
+    }
+
+    function initTheme() {
+      const stored = localStorage.getItem("scr-theme");
+      if (stored === "light" || stored === "dark") {
+        document.documentElement.setAttribute("data-theme", stored);
+      }
+      updateThemeButton();
+
+      themeToggle.addEventListener("click", () => {
+        const cur =
+          document.documentElement.getAttribute("data-theme") || "dark";
+        const next = cur === "dark" ? "light" : "dark";
+        document.documentElement.setAttribute("data-theme", next);
+        localStorage.setItem("scr-theme", next);
+        updateThemeButton();
+      });
+    }
+
+    function updateThemeButton() {
+      const cur =
+        document.documentElement.getAttribute("data-theme") || "dark";
+      themeToggle.textContent = cur === "dark" ? "Dark" : "Light";
+    }
+
+    // init
+    buildGridFrame();
+    placeCerts();
+    initFilters();
+    renderRanking();
+    initTheme();
+  </script>
 </body>
 </html>
