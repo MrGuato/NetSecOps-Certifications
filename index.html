@@ -263,10 +263,10 @@
 
     .atlas-grid {
       display: grid;
-      grid-template-columns: minmax(90px, 120px) repeat(6, minmax(80px, 1fr));
+      grid-template-columns: minmax(90px, 120px) repeat(7, minmax(80px, 1fr));
       font-size: 0.7rem;
       border-bottom: 1px solid rgba(31, 41, 55, 0.7);
-      min-width: 620px;
+      min-width: 700px;
     }
 
     .atlas-header-cell {
@@ -293,10 +293,6 @@
       color: var(--text-muted);
       background: rgba(15, 23, 42, 0.96);
       white-space: nowrap;
-    }
-
-    .atlas-row {
-      display: contents;
     }
 
     .atlas-cell {
@@ -574,7 +570,65 @@
         <div class="atlas-grid-wrapper">
           <div class="atlas-grid-scroller">
             <div class="atlas-grid" id="atlasGrid">
-              <!-- Populated by JS -->
+              <!-- Header row -->
+              <div class="atlas-header-cell"></div>
+              <div class="atlas-header-cell">Foundations</div>
+              <div class="atlas-header-cell">Network</div>
+              <div class="atlas-header-cell">Blue / DFIR</div>
+              <div class="atlas-header-cell">Red / Offense</div>
+              <div class="atlas-header-cell">Cloud / DevSecOps</div>
+              <div class="atlas-header-cell">GRC / Mgmt</div>
+              <div class="atlas-header-cell">AI &amp; ML Sec</div>
+
+              <!-- Starter row -->
+              <div class="atlas-row-label">Starter</div>
+              <div class="atlas-cell" id="cell-starter-foundation"></div>
+              <div class="atlas-cell" id="cell-starter-network"></div>
+              <div class="atlas-cell" id="cell-starter-blue"></div>
+              <div class="atlas-cell" id="cell-starter-red"></div>
+              <div class="atlas-cell" id="cell-starter-cloud"></div>
+              <div class="atlas-cell" id="cell-starter-grc"></div>
+              <div class="atlas-cell" id="cell-starter-ai"></div>
+
+              <!-- Associate row -->
+              <div class="atlas-row-label">Associate</div>
+              <div class="atlas-cell" id="cell-associate-foundation"></div>
+              <div class="atlas-cell" id="cell-associate-network"></div>
+              <div class="atlas-cell" id="cell-associate-blue"></div>
+              <div class="atlas-cell" id="cell-associate-red"></div>
+              <div class="atlas-cell" id="cell-associate-cloud"></div>
+              <div class="atlas-cell" id="cell-associate-grc"></div>
+              <div class="atlas-cell" id="cell-associate-ai"></div>
+
+              <!-- Intermediate row -->
+              <div class="atlas-row-label">Intermediate</div>
+              <div class="atlas-cell" id="cell-intermediate-foundation"></div>
+              <div class="atlas-cell" id="cell-intermediate-network"></div>
+              <div class="atlas-cell" id="cell-intermediate-blue"></div>
+              <div class="atlas-cell" id="cell-intermediate-red"></div>
+              <div class="atlas-cell" id="cell-intermediate-cloud"></div>
+              <div class="atlas-cell" id="cell-intermediate-grc"></div>
+              <div class="atlas-cell" id="cell-intermediate-ai"></div>
+
+              <!-- Advanced row -->
+              <div class="atlas-row-label">Advanced</div>
+              <div class="atlas-cell" id="cell-advanced-foundation"></div>
+              <div class="atlas-cell" id="cell-advanced-network"></div>
+              <div class="atlas-cell" id="cell-advanced-blue"></div>
+              <div class="atlas-cell" id="cell-advanced-red"></div>
+              <div class="atlas-cell" id="cell-advanced-cloud"></div>
+              <div class="atlas-cell" id="cell-advanced-grc"></div>
+              <div class="atlas-cell" id="cell-advanced-ai"></div>
+
+              <!-- Expert row -->
+              <div class="atlas-row-label">Expert</div>
+              <div class="atlas-cell" id="cell-expert-foundation"></div>
+              <div class="atlas-cell" id="cell-expert-network"></div>
+              <div class="atlas-cell" id="cell-expert-blue"></div>
+              <div class="atlas-cell" id="cell-expert-red"></div>
+              <div class="atlas-cell" id="cell-expert-cloud"></div>
+              <div class="atlas-cell" id="cell-expert-grc"></div>
+              <div class="atlas-cell" id="cell-expert-ai"></div>
             </div>
           </div>
           <div class="atlas-footer">
@@ -702,7 +756,7 @@
     ];
 
     // ---------- Certification data (sample subset) ----------
-
+    // Add more objects to grow this toward 460+.
     const CERTS = [
       // Foundations
       {
@@ -920,7 +974,7 @@
       current: null
     };
 
-    const atlasGrid = document.getElementById("atlasGrid");
+    // DOM refs
     const rankingListEl = document.getElementById("rankingList");
     const rankingSummaryEl = document.getElementById("rankingSummary");
     const currentCertEl = document.getElementById("currentCert");
@@ -932,56 +986,28 @@
     const sortSelect = document.getElementById("sortSelect");
     const themeToggle = document.getElementById("themeToggle");
 
-    // ---------- Grid building ----------
-
-    function headerCell(text) {
-      const div = document.createElement("div");
-      div.className = "atlas-header-cell";
-      div.textContent = text;
-      return div;
-    }
-
-    function buildAtlasFrame() {
-      atlasGrid.innerHTML = "";
-
-      // header row
-      atlasGrid.appendChild(headerCell(""));
-      TRACKS.forEach(t => atlasGrid.appendChild(headerCell(t.label)));
-
-      // tiers + cells
-      TIERS.forEach(tier => {
-        const label = document.createElement("div");
-        label.className = "atlas-row-label";
-        label.textContent = tier.label;
-        atlasGrid.appendChild(label);
-
-        TRACKS.forEach(track => {
-          const cell = document.createElement("div");
-          cell.className = "atlas-cell";
-          cell.dataset.tier = tier.id;
-          cell.dataset.track = track.id;
-          atlasGrid.appendChild(cell);
-        });
-      });
-    }
+    // ---------- Place pills into static cells ----------
 
     function placePills() {
-      atlasGrid.querySelectorAll(".pill").forEach(p => p.remove());
+      // Clear existing pills
+      const existing = document.querySelectorAll(".pill");
+      existing.forEach(function (p) { p.remove(); });
 
-      CERTS.forEach(cert => {
-        const cell = atlasGrid.querySelector(
-          `.atlas-cell[data-tier="${cert.tier}"][data-track="${cert.track}"]`
-        );
+      CERTS.forEach(function (cert) {
+        const cellId = "cell-" + cert.tier + "-" + cert.track;
+        const cell = document.getElementById(cellId);
         if (!cell) return;
 
         const pill = document.createElement("button");
         pill.type = "button";
         pill.className = "pill";
-        pill.dataset.code = cert.code;
-        pill.dataset.track = cert.track;
-        pill.title = `${cert.code} • ${cert.name} (${cert.provider})`;
+        pill.setAttribute("data-code", cert.code);
+        pill.setAttribute("data-track", cert.track);
+        pill.title = cert.code + " • " + cert.name + " (" + cert.provider + ")";
         pill.textContent = cert.code;
-        pill.addEventListener("click", () => selectCert(cert.code));
+        pill.addEventListener("click", function () {
+          selectCert(cert.code);
+        });
         cell.appendChild(pill);
       });
     }
@@ -989,16 +1015,16 @@
     // ---------- Ranking & filters ----------
 
     function filteredCerts() {
-      return CERTS.filter(c => {
+      return CERTS.filter(function (c) {
         if (state.track !== "all" && c.track !== state.track) return false;
         if (state.tier !== "all" && c.tier !== state.tier) return false;
         if (c.rating < state.minRating) return false;
         if (state.search) {
-          const h = `${c.code} ${c.name} ${c.provider}`.toLowerCase();
-          if (!h.includes(state.search.toLowerCase())) return false;
+          var h = (c.code + " " + c.name + " " + c.provider).toLowerCase();
+          if (h.indexOf(state.search.toLowerCase()) === -1) return false;
         }
         return true;
-      }).sort((a, b) => {
+      }).sort(function (a, b) {
         if (state.sort === "difficulty") return a.difficulty - b.difficulty;
         if (state.sort === "popularity") return b.popularity - a.popularity;
         return b.rating - a.rating;
@@ -1006,75 +1032,87 @@
     }
 
     function renderRanking() {
-      const list = filteredCerts();
+      var list = filteredCerts();
       rankingListEl.innerHTML = "";
-      list.forEach(cert => {
-        const li = document.createElement("li");
+      list.forEach(function (cert) {
+        var li = document.createElement("li");
         li.className = "ranking-item";
-        li.dataset.code = cert.code;
-        li.innerHTML = `
-          <span class="name">${cert.code}</span>
-          <span class="meta">
-            ${cert.rating.toFixed(1)}★ • diff ${cert.difficulty.toFixed(1)} • pop ${cert.popularity.toFixed(1)}
-          </span>
-        `;
-        li.addEventListener("click", () => selectCert(cert.code));
+        li.setAttribute("data-code", cert.code);
+        li.innerHTML =
+          '<span class="name">' +
+          cert.code +
+          '</span><span class="meta"> ' +
+          cert.rating.toFixed(1) +
+          "★ • diff " +
+          cert.difficulty.toFixed(1) +
+          " • pop " +
+          cert.popularity.toFixed(1) +
+          "</span>";
+        li.addEventListener("click", function () {
+          selectCert(cert.code);
+        });
         rankingListEl.appendChild(li);
       });
 
-      const total = CERTS.length;
-      const shown = list.length;
+      var total = CERTS.length;
+      var shown = list.length;
       rankingSummaryEl.textContent =
         shown === total
-          ? `${shown} certifications listed`
-          : `${shown} of ${total} certifications shown (filters on)`;
+          ? shown + " certifications listed"
+          : shown + " of " + total + " certifications shown (filters on)";
     }
 
     function clearHighlights() {
-      document.querySelectorAll(".pill.is-highlighted").forEach(p => p.classList.remove("is-highlighted"));
-      document.querySelectorAll(".ranking-item.is-active").forEach(li => li.classList.remove("is-active"));
+      Array.prototype.forEach.call(
+        document.querySelectorAll(".pill.is-highlighted"),
+        function (p) { p.classList.remove("is-highlighted"); }
+      );
+      Array.prototype.forEach.call(
+        document.querySelectorAll(".ranking-item.is-active"),
+        function (li) { li.classList.remove("is-active"); }
+      );
     }
 
     function trackLabel(id) {
-      const t = TRACKS.find(t => t.id === id);
+      var t = TRACKS.find(function (t) { return t.id === id; });
       return t ? t.label : id;
     }
 
     function tierLabel(id) {
-      const t = TIERS.find(t => t.id === id);
+      var t = TIERS.find(function (t) { return t.id === id; });
       return t ? t.label : id;
     }
 
     function selectCert(code) {
-      const cert = CERTS.find(c => c.code === code);
+      var cert = CERTS.find(function (c) { return c.code === code; });
       if (!cert) return;
       state.current = cert;
 
       clearHighlights();
 
-      const pill = document.querySelector(`.pill[data-code="${code}"]`);
-      const item = document.querySelector(`.ranking-item[data-code="${code}"]`);
+      var pill = document.querySelector('.pill[data-code="' + code + '"]');
+      var item = document.querySelector('.ranking-item[data-code="' + code + '"]');
       if (pill) pill.classList.add("is-highlighted");
       if (item) item.classList.add("is-active");
 
       currentCertEl.style.display = "block";
-      currentCertEl.innerHTML = `
-        <h3>${cert.name}</h3>
-        <small>${cert.provider}</small><br/>
-        <a href="${cert.url}" target="_blank" rel="noopener noreferrer">${cert.code} – official link</a>
-        <div class="tag-row">
-          <span class="tag">Track: ${trackLabel(cert.track)}</span>
-          <span class="tag">Tier: ${tierLabel(cert.tier)}</span>
-          <span class="tag">Rating: ${cert.rating.toFixed(1)}★</span>
-          <span class="tag">Difficulty: ${cert.difficulty.toFixed(1)}/5</span>
-          <span class="tag">Popularity: ${cert.popularity.toFixed(1)}/5</span>
-          ${
-            cert.focus && cert.focus.length
-              ? `<span class="tag">Focus: ${cert.focus.join(", ")}</span>`
-              : ""
-          }
-        </div>
-      `;
+      var focusText = cert.focus && cert.focus.length
+        ? '<span class="tag">Focus: ' + cert.focus.join(", ") + "</span>"
+        : "";
+
+      currentCertEl.innerHTML =
+        "<h3>" + cert.name + "</h3>" +
+        "<small>" + cert.provider + "</small><br/>" +
+        '<a href="' + cert.url + '" target="_blank" rel="noopener noreferrer">' +
+        cert.code + " – official link</a>" +
+        '<div class="tag-row">' +
+        '<span class="tag">Track: ' + trackLabel(cert.track) + "</span>" +
+        '<span class="tag">Tier: ' + tierLabel(cert.tier) + "</span>" +
+        '<span class="tag">Rating: ' + cert.rating.toFixed(1) + "★</span>" +
+        '<span class="tag">Difficulty: ' + cert.difficulty.toFixed(1) + "/5</span>" +
+        '<span class="tag">Popularity: ' + cert.popularity.toFixed(1) + "/5</span>" +
+        focusText +
+        "</div>";
     }
 
     // ---------- Controls ----------
@@ -1082,33 +1120,37 @@
     function initControls() {
       trackSelect.innerHTML =
         '<option value="all">All tracks</option>' +
-        TRACKS.map(t => `<option value="${t.id}">${t.label}</option>`).join("");
+        TRACKS.map(function (t) {
+          return '<option value="' + t.id + '">' + t.label + "</option>";
+        }).join("");
 
       tierSelect.innerHTML =
         '<option value="all">All tiers</option>' +
-        TIERS.map(t => `<option value="${t.id}">${t.label}</option>`).join("");
+        TIERS.map(function (t) {
+          return '<option value="' + t.id + '">' + t.label + "</option>";
+        }).join("");
 
-      trackSelect.addEventListener("change", e => {
+      trackSelect.addEventListener("change", function (e) {
         state.track = e.target.value;
         renderRanking();
       });
 
-      tierSelect.addEventListener("change", e => {
+      tierSelect.addEventListener("change", function (e) {
         state.tier = e.target.value;
         renderRanking();
       });
 
-      ratingSelect.addEventListener("change", e => {
+      ratingSelect.addEventListener("change", function (e) {
         state.minRating = parseFloat(e.target.value || "0");
         renderRanking();
       });
 
-      sortSelect.addEventListener("change", e => {
+      sortSelect.addEventListener("change", function (e) {
         state.sort = e.target.value;
         renderRanking();
       });
 
-      searchInput.addEventListener("input", e => {
+      searchInput.addEventListener("input", function (e) {
         state.search = e.target.value.trim();
         renderRanking();
       });
@@ -1117,15 +1159,15 @@
     // ---------- Theme ----------
 
     function initTheme() {
-      const stored = localStorage.getItem("cert-atlas-theme");
+      var stored = localStorage.getItem("cert-atlas-theme");
       if (stored === "light" || stored === "dark") {
         document.documentElement.setAttribute("data-theme", stored);
       }
       updateThemeButton();
 
-      themeToggle.addEventListener("click", () => {
-        const cur = document.documentElement.getAttribute("data-theme") || "dark";
-        const next = cur === "dark" ? "light" : "dark";
+      themeToggle.addEventListener("click", function () {
+        var cur = document.documentElement.getAttribute("data-theme") || "dark";
+        var next = cur === "dark" ? "light" : "dark";
         document.documentElement.setAttribute("data-theme", next);
         localStorage.setItem("cert-atlas-theme", next);
         updateThemeButton();
@@ -1133,7 +1175,7 @@
     }
 
     function updateThemeButton() {
-      const cur = document.documentElement.getAttribute("data-theme") || "dark";
+      var cur = document.documentElement.getAttribute("data-theme") || "dark";
       themeToggle.innerHTML =
         cur === "dark"
           ? '<span class="icon">☾</span> Theme'
@@ -1142,14 +1184,13 @@
 
     // ---------- Init ----------
 
-    buildAtlasFrame();
     placePills();
     initControls();
     renderRanking();
     initTheme();
 
-    // Auto-select highest rated cert as example
-    const top = [...CERTS].sort((a, b) => b.rating - a.rating)[0];
+    // Auto-select highest rated cert
+    var top = CERTS.slice().sort(function (a, b) { return b.rating - a.rating; })[0];
     if (top) selectCert(top.code);
   </script>
 </body>
