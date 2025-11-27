@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <title>Modern Security Certification Roadmap</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta
+    name="description"
+    content="Interactive security certification roadmap inspired by Paul Jerimy, with ratings, rankings, and an AI & ML security track. Community-maintained and open source."
+  />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-main">
+      <h1>Security Certification Roadmap</h1>
+      <p>
+        Inspired by Paul Jerimy’s roadmap • New AI &amp; ML Security column •
+        Community-maintained ratings &amp; rankings
+      </p>
+    </div>
+    <div class="header-actions">
+      <button id="themeToggle" class="btn-ghost" type="button">Dark</button>
+      <a
+        class="btn-primary"
+        href="https://github.com/YOUR_GITHUB_USERNAME/security-cert-roadmap"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        View on GitHub
+      </a>
+    </div>
+  </header>
+
+  <main class="page">
+    <section class="intro">
+      <p>
+        This is an independent, modernized take on the classic Security Certification
+        Roadmap. Layout and idea are heavily inspired by
+        <a href="https://www.pauljerimy.com/security-certification-roadmap/" target="_blank" rel="noopener noreferrer">
+          Paul Jerimy’s original work
+        </a>,
+        but all ratings and AI additions here are community-maintained and opinionated.
+      </p>
+      <p class="intro-note">
+        Want to add or adjust a certificate? Edit the data in
+        <code>script.js</code> and send a pull request.
+      </p>
+    </section>
+
+    <section class="layout">
+      <!-- LEFT: big grid “map” -->
+      <section class="roadmap-section">
+        <div class="roadmap-header">
+          <h2>Roadmap Grid</h2>
+          <p>
+            Columns = domains • Rows = difficulty • Each box = certification
+            (click to highlight in the ranking list).
+          </p>
+        </div>
+
+        <div id="roadmapGrid" class="roadmap-grid">
+          <!-- Grid is built dynamically by script.js -->
+        </div>
+
+        <div class="legend">
+          <div>
+            <strong>Color Legend</strong>
+            <ul>
+              <li><span class="legend-swatch legend-foundations"></span> Core Foundations</li>
+              <li><span class="legend-swatch legend-blue"></span> Blue Team &amp; DFIR</li>
+              <li><span class="legend-swatch legend-red"></span> Red Team &amp; Exploit</li>
+              <li><span class="legend-swatch legend-appsec"></span> AppSec &amp; Code</li>
+              <li><span class="legend-swatch legend-cloud"></span> Cloud &amp; Zero Trust</li>
+              <li><span class="legend-swatch legend-management"></span> GRC &amp; Management</li>
+              <li><span class="legend-swatch legend-ai"></span> AI &amp; ML Security</li>
+            </ul>
+          </div>
+          <div>
+            <strong>Difficulty Rows</strong>
+            <ul>
+              <li>Intro / Fundamentals</li>
+              <li>Associate / Junior</li>
+              <li>Intermediate</li>
+              <li>Advanced</li>
+              <li>Expert</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- RIGHT: ranking & filters -->
+      <aside class="sidebar">
+        <section class="panel">
+          <h2>Filters</h2>
+          <label class="field">
+            <span>Search</span>
+            <input id="searchInput" type="search" placeholder="CISSP, OSCP, AI-900…" />
+          </label>
+
+          <label class="field">
+            <span>Track</span>
+            <select id="trackSelect"></select>
+          </label>
+
+          <label class="field">
+            <span>Minimum rating</span>
+            <select id="ratingSelect">
+              <option value="0">Any</option>
+              <option value="3">3.0+</option>
+              <option value="3.5">3.5+</option>
+              <option value="4">4.0+</option>
+              <option value="4.5">4.5+</option>
+            </select>
+          </label>
+
+          <label class="field">
+            <span>Sort ranking by</span>
+            <select id="sortSelect">
+              <option value="rating">Rating (high → low)</option>
+              <option value="difficulty">Difficulty (low → high)</option>
+              <option value="popularity">Popularity (high → low)</option>
+            </select>
+          </label>
+
+          <p class="helper">
+            Ratings are community opinions only, not promises of salary or job offers.
+          </p>
+        </section>
+
+        <section class="panel">
+          <h2>Top Ranked Certifications</h2>
+          <p id="rankingSummary" class="helper"></p>
+          <ol id="rankingList" class="ranking-list">
+            <!-- Filled by script.js -->
+          </ol>
+        </section>
+
+        <section class="panel small">
+          <h2>Contribute</h2>
+          <p class="helper">
+            Fork the repo, update the cert data in <code>script.js</code>, and open a PR.
+            Please include an official link and a short note for each new or changed cert.
+          </p>
+        </section>
+      </aside>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>
+      This project is not affiliated with Paul Jerimy. Layout idea credit to him; all
+      modifications and AI content released under your chosen open-source license.
+    </p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
