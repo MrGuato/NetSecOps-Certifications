@@ -2,31 +2,32 @@
 <html lang="en" data-theme="dark">
 <head>
   <meta charset="UTF-8" />
-  <title>Security Certification Roadmap</title>
+  <title>IT & Security Certification Atlas</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta
     name="description"
-    content="Interactive security certification roadmap inspired by Paul Jerimy, with ratings, rankings, and an AI & ML security track. Community-maintained and open source."
+    content="Interactive atlas of IT and security certifications with ratings, difficulty tiers, and an AI & ML security track."
   />
   <style>
     :root {
-      --bg: #050712;
-      --bg-elevated: #111827;
-      --bg-soft: #020617;
+      --bg: #050814;
+      --bg-elevated: #0b1020;
+      --bg-soft: #050814;
       --text: #f9fafb;
       --text-muted: #9ca3af;
       --border-subtle: #1f2937;
-      --accent: #3b82f6;
+      --accent: #38bdf8;
+      --accent-soft: rgba(56, 189, 248, 0.12);
       --radius: 8px;
       --font: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
         "Segoe UI", sans-serif;
 
-      --track-foundations: #22c55e;
-      --track-blue: #0ea5e9;
+      --track-foundation: #22c55e;
+      --track-network: #0ea5e9;
+      --track-blue: #38bdf8;
       --track-red: #f97316;
-      --track-appsec: #a855f7;
-      --track-cloud: #38bdf8;
-      --track-management: #facc15;
+      --track-cloud: #a855f7;
+      --track-grc: #facc15;
       --track-ai: #ec4899;
     }
 
@@ -34,9 +35,10 @@
       --bg: #f3f4f6;
       --bg-elevated: #ffffff;
       --bg-soft: #e5e7eb;
-      --text: #111827;
+      --text: #0f172a;
       --text-muted: #6b7280;
       --border-subtle: #d1d5db;
+      --accent-soft: rgba(56, 189, 248, 0.18);
     }
 
     *,
@@ -50,8 +52,9 @@
       margin: 0;
       padding: 0;
       font-family: var(--font);
-      background: var(--bg);
+      background: radial-gradient(circle at top, #0f172a 0, #020617 55%);
       color: var(--text);
+      min-height: 100%;
     }
 
     /* Header */
@@ -61,253 +64,316 @@
       top: 0;
       z-index: 20;
       display: flex;
-      justify-content: space-between;
       align-items: center;
+      justify-content: space-between;
       padding: 14px 4vw;
-      background: rgba(15, 23, 42, 0.96);
-      border-bottom: 1px solid var(--border-subtle);
+      background: rgba(15, 23, 42, 0.95);
+      border-bottom: 1px solid rgba(15, 23, 42, 0.9);
       backdrop-filter: blur(12px);
     }
 
-    .site-header h1 {
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand-mark {
+      width: 28px;
+      height: 28px;
+      border-radius: 10px;
+      background: radial-gradient(circle at 30% 0, #e5e7eb 0, #0ea5e9 40%, #020617 100%);
+      border: 1px solid rgba(148, 163, 184, 0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      color: #0b1120;
+    }
+
+    .brand-text h1 {
       margin: 0;
-      font-size: 1.3rem;
+      font-size: 1rem;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
     }
 
-    .site-header p {
-      margin: 4px 0 0;
-      font-size: 0.85rem;
+    .brand-text p {
+      margin: 2px 0 0;
+      font-size: 0.78rem;
       color: var(--text-muted);
-    }
-
-    .header-main {
-      max-width: 640px;
     }
 
     .header-actions {
       display: flex;
-      gap: 10px;
+      align-items: center;
+      gap: 8px;
     }
 
-    /* Buttons */
-
-    .btn-primary,
+    .btn,
     .btn-ghost {
       border-radius: 999px;
-      padding: 7px 14px;
-      font-size: 0.8rem;
+      padding: 6px 12px;
+      font-size: 0.75rem;
       font-weight: 500;
-      cursor: pointer;
       border: 1px solid transparent;
-    }
-
-    .btn-primary {
-      background: var(--accent);
-      color: #fff;
-      text-decoration: none;
+      cursor: pointer;
       display: inline-flex;
       align-items: center;
-      justify-content: center;
+      gap: 6px;
+      text-decoration: none;
     }
 
-    .btn-primary:hover {
-      opacity: 0.9;
+    .btn {
+      background: linear-gradient(135deg, var(--accent), #0ea5e9);
+      color: #f9fafb;
     }
 
     .btn-ghost {
-      background: transparent;
       border-color: var(--border-subtle);
+      background: rgba(15, 23, 42, 0.85);
       color: var(--text);
+    }
+
+    .btn span.icon {
+      font-size: 0.85em;
+      opacity: 0.85;
     }
 
     /* Layout */
 
     .page {
-      padding: 18px 4vw 32px;
+      padding: 16px 4vw 32px;
     }
 
     .intro {
       max-width: 960px;
-      margin: 0 auto 18px;
-      font-size: 0.9rem;
+      margin: 0 auto 16px;
+      font-size: 0.86rem;
       color: var(--text-muted);
     }
 
-    .intro a {
-      color: var(--accent);
+    .intro strong {
+      color: var(--text);
+      font-weight: 600;
     }
 
     .intro-note {
-      margin-top: 6px;
-      font-size: 0.85rem;
+      margin-top: 4px;
+      font-size: 0.8rem;
+      padding: 4px 10px;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--accent-soft);
+      border: 1px solid rgba(56, 189, 248, 0.4);
+      color: var(--text);
+    }
+
+    .intro-note span.badge {
+      padding: 2px 6px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.6);
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
     }
 
     .layout {
       display: grid;
-      grid-template-columns: minmax(0, 2.5fr) minmax(260px, 1fr);
-      gap: 18px;
+      grid-template-columns: minmax(0, 2.6fr) minmax(260px, 1fr);
+      gap: 16px;
       align-items: flex-start;
+      margin-top: 16px;
     }
 
-    /* Roadmap grid / map */
+    /* Atlas panel */
 
-    .roadmap-section {
-      background: var(--bg-elevated);
-      border-radius: var(--radius);
-      border: 1px solid var(--border-subtle);
+    .panel {
+      background: radial-gradient(circle at top left, rgba(148, 163, 184, 0.2), transparent 40%),
+        var(--bg-elevated);
+      border-radius: 16px;
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      box-shadow: 0 18px 40px rgba(15, 23, 42, 0.6);
       padding: 14px;
     }
 
-    .roadmap-header h2 {
-      margin: 0;
-      font-size: 1rem;
-    }
-
-    .roadmap-header p {
-      margin: 4px 0 10px;
-      font-size: 0.8rem;
-      color: var(--text-muted);
-    }
-
-    .roadmap-grid {
-      display: grid;
-      grid-auto-rows: minmax(70px, auto);
-      column-gap: 4px;
-      row-gap: 4px;
-      margin-bottom: 12px;
-    }
-
-    .grid-cell,
-    .grid-track-header,
-    .grid-level-label {
-      border-radius: 4px;
-      padding: 4px;
-    }
-
-    .grid-track-header {
-      font-size: 0.75rem;
-      font-weight: 600;
-      text-align: center;
-      background: var(--bg-soft);
-      border: 1px solid var(--border-subtle);
-    }
-
-    .grid-level-label {
-      font-size: 0.75rem;
+    .panel-header {
       display: flex;
-      align-items: center;
-      justify-content: flex-end;
-      padding-right: 6px;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .panel-header h2 {
+      margin: 0;
+      font-size: 0.92rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .panel-header p {
+      margin: 2px 0 0;
+      font-size: 0.76rem;
       color: var(--text-muted);
     }
 
-    .grid-cell {
-      border: 1px dashed rgba(148, 163, 184, 0.3);
+    .chip-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 6px;
+    }
+
+    .chip {
+      font-size: 0.7rem;
+      padding: 2px 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.5);
+      color: var(--text-muted);
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .chip span.dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background: #22c55e;
+    }
+
+    /* Grid */
+
+    .atlas-grid-wrapper {
+      margin-top: 8px;
+      border-radius: 12px;
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      background: radial-gradient(circle at top, rgba(15, 23, 42, 0.8), rgba(15, 23, 42, 0.95));
+      overflow: hidden;
+    }
+
+    .atlas-grid {
+      display: grid;
+      grid-template-columns: minmax(90px, 120px) repeat(6, minmax(80px, 1fr));
+      font-size: 0.7rem;
+      border-bottom: 1px solid rgba(31, 41, 55, 0.7);
+    }
+
+    .atlas-header-cell {
+      padding: 6px 4px;
+      text-align: center;
+      border-right: 1px solid rgba(31, 41, 55, 0.7);
+      color: var(--text-muted);
+      background: radial-gradient(circle at top, #020617, #020617);
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .atlas-header-cell:first-child {
+      text-align: right;
+      padding-right: 8px;
+      background: #020617;
+    }
+
+    .atlas-row-label {
+      padding: 6px 6px;
+      text-align: right;
+      border-right: 1px solid rgba(31, 41, 55, 0.7);
+      color: var(--text-muted);
+      background: rgba(15, 23, 42, 0.96);
+      white-space: nowrap;
+    }
+
+    .atlas-row {
+      display: contents;
+    }
+
+    .atlas-cell {
+      min-height: 46px;
+      border-right: 1px solid rgba(31, 41, 55, 0.7);
+      border-top: 1px solid rgba(31, 41, 55, 0.7);
+      padding: 2px 2px;
       position: relative;
       overflow: hidden;
     }
 
-    .cert-pill {
+    .atlas-cell:last-child {
+      border-right: none;
+    }
+
+    .pill {
       display: inline-flex;
       align-items: center;
-      gap: 4px;
-      margin: 2px;
-      padding: 2px 6px;
+      justify-content: center;
       border-radius: 999px;
-      font-size: 0.7rem;
-      font-weight: 500;
-      color: #020617;
+      padding: 2px 6px;
+      margin: 1px;
+      font-size: 0.62rem;
+      font-weight: 600;
       cursor: pointer;
-      border: 1px solid rgba(15, 23, 42, 0.18);
-      background: #e5e7eb;
+      border: 1px solid rgba(15, 23, 42, 0.7);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
       white-space: nowrap;
+      user-select: none;
     }
 
-    [data-track="foundations"] .cert-pill {
-      background: var(--track-foundations);
+    .pill[data-track="foundation"] {
+      background: var(--track-foundation);
+      color: #022c22;
     }
-
-    [data-track="blue"] .cert-pill {
+    .pill[data-track="network"] {
+      background: var(--track-network);
+      color: #012a3a;
+    }
+    .pill[data-track="blue"] {
       background: var(--track-blue);
+      color: #012a3a;
     }
-
-    [data-track="red"] .cert-pill {
+    .pill[data-track="red"] {
       background: var(--track-red);
+      color: #3b0a02;
     }
-
-    [data-track="appsec"] .cert-pill {
-      background: var(--track-appsec);
-    }
-
-    [data-track="cloud"] .cert-pill {
+    .pill[data-track="cloud"] {
       background: var(--track-cloud);
+      color: #2e1065;
     }
-
-    [data-track="management"] .cert-pill {
-      background: var(--track-management);
+    .pill[data-track="grc"] {
+      background: var(--track-grc);
+      color: #3b2704;
     }
-
-    [data-track="ai"] .cert-pill {
+    .pill[data-track="ai"] {
       background: var(--track-ai);
+      color: #3b082f;
     }
 
-    .cert-pill small {
-      opacity: 0.9;
+    .pill.is-highlighted {
+      box-shadow: 0 0 0 2px #e5e7eb, 0 0 0 4px var(--accent);
+      transform: translateY(-1px);
     }
 
-    .cert-pill.is-highlighted {
-      box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px var(--accent);
-    }
-
-    .legend {
+    .atlas-footer {
       display: flex;
       justify-content: space-between;
-      gap: 16px;
-      padding-top: 8px;
-      border-top: 1px solid var(--border-subtle);
-      font-size: 0.8rem;
-      color: var(--text-muted);
-    }
-
-    .legend ul {
-      list-style: none;
-      padding: 0;
-      margin: 4px 0 0;
-    }
-
-    .legend li {
-      display: flex;
       align-items: center;
-      gap: 4px;
+      padding: 6px 8px;
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      background: #020617;
     }
 
-    .legend-swatch {
-      display: inline-block;
-      width: 10px;
-      height: 10px;
+    .atlas-footer span.dot {
+      width: 6px;
+      height: 6px;
       border-radius: 999px;
-    }
-
-    .legend-foundations {
-      background: var(--track-foundations);
-    }
-    .legend-blue {
-      background: var(--track-blue);
-    }
-    .legend-red {
-      background: var(--track-red);
-    }
-    .legend-appsec {
-      background: var(--track-appsec);
-    }
-    .legend-cloud {
-      background: var(--track-cloud);
-    }
-    .legend-management {
-      background: var(--track-management);
-    }
-    .legend-ai {
-      background: var(--track-ai);
+      display: inline-block;
+      margin-right: 4px;
     }
 
     /* Sidebar */
@@ -315,49 +381,37 @@
     .sidebar {
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: 10px;
     }
 
-    .panel {
-      background: var(--bg-elevated);
-      border-radius: var(--radius);
-      border: 1px solid var(--border-subtle);
+    .sidebar .panel {
       padding: 12px;
-    }
-
-    .panel.small p {
-      margin: 0;
-    }
-
-    .panel h2 {
-      margin: 0 0 6px;
-      font-size: 0.9rem;
     }
 
     .field {
       display: flex;
       flex-direction: column;
+      gap: 2px;
       margin-bottom: 8px;
-      font-size: 0.78rem;
+      font-size: 0.76rem;
     }
 
-    .field span {
-      margin-bottom: 2px;
+    .field label {
       color: var(--text-muted);
     }
 
     .field input,
     .field select {
       border-radius: 999px;
-      border: 1px solid var(--border-subtle);
-      padding: 5px 9px;
-      font-size: 0.8rem;
-      background: var(--bg-soft);
+      border: 1px solid rgba(148, 163, 184, 0.5);
+      padding: 5px 10px;
+      font-size: 0.78rem;
+      background: rgba(15, 23, 42, 0.9);
       color: var(--text);
     }
 
     .helper {
-      font-size: 0.75rem;
+      font-size: 0.74rem;
       color: var(--text-muted);
     }
 
@@ -365,7 +419,10 @@
       list-style: decimal;
       padding-left: 18px;
       margin: 6px 0 0;
-      font-size: 0.8rem;
+      max-height: 260px;
+      overflow-y: auto;
+      scrollbar-width: thin;
+      font-size: 0.78rem;
     }
 
     .ranking-item {
@@ -386,13 +443,49 @@
       color: var(--accent);
     }
 
-    /* Footer */
+    .current-cert {
+      margin-top: 6px;
+      padding: 6px 8px;
+      border-radius: 10px;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px dashed rgba(148, 163, 184, 0.6);
+      font-size: 0.76rem;
+    }
 
-    .site-footer {
-      padding: 12px 4vw 18px;
-      font-size: 0.75rem;
+    .current-cert h3 {
+      margin: 0 0 3px;
+      font-size: 0.8rem;
+    }
+
+    .current-cert a {
+      color: var(--accent);
+      text-decoration: none;
+      font-size: 0.74rem;
+    }
+
+    .current-cert small {
       color: var(--text-muted);
-      border-top: 1px solid var(--border-subtle);
+    }
+
+    .tag-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      margin-top: 4px;
+    }
+
+    .tag {
+      padding: 1px 6px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.5);
+      font-size: 0.7rem;
+      color: var(--text-muted);
+    }
+
+    .footer {
+      padding: 10px 4vw 20px;
+      font-size: 0.72rem;
+      color: var(--text-muted);
       text-align: center;
     }
 
@@ -402,43 +495,58 @@
       .layout {
         grid-template-columns: minmax(0, 1fr);
       }
+
+      .atlas-grid {
+        overflow-x: auto;
+        display: block;
+        white-space: nowrap;
+      }
+
+      .atlas-grid-inner {
+        display: grid;
+        grid-template-columns: minmax(90px, 120px) repeat(6, minmax(80px, 1fr));
+        min-width: 620px;
+      }
     }
 
     @media (max-width: 640px) {
       .site-header {
         flex-direction: column;
-        align-items: flex-start;
-        gap: 6px;
+        align-items: stretch;
+        gap: 8px;
       }
 
       .header-actions {
-        align-self: stretch;
+        align-self: flex-end;
       }
 
-      .roadmap-grid {
-        font-size: 0.72rem;
+      .intro {
+        font-size: 0.82rem;
       }
     }
   </style>
 </head>
 <body>
+  <!-- Data model structure is compatible with importing larger external cert lists later. -->
   <header class="site-header">
-    <div class="header-main">
-      <h1>Security Certification Roadmap</h1>
-      <p>
-        Inspired by Paul Jerimy’s roadmap • New AI &amp; ML Security column •
-        Community-maintained ratings &amp; rankings
-      </p>
+    <div class="brand">
+      <div class="brand-mark">CA</div>
+      <div class="brand-text">
+        <h1>Certification Atlas</h1>
+        <p>Explore IT &amp; security certs by track, tier, and rating.</p>
+      </div>
     </div>
     <div class="header-actions">
-      <button id="themeToggle" class="btn-ghost" type="button">Dark</button>
+      <button id="themeToggle" class="btn-ghost" type="button">
+        <span class="icon">☾</span> Theme
+      </button>
       <a
-        class="btn-primary"
-        href="https://github.com/YOUR_GITHUB_USERNAME/security-cert-roadmap"
+        class="btn"
+        href="https://github.com/YOUR_GITHUB_USERNAME/certification-atlas"
         target="_blank"
         rel="noopener noreferrer"
       >
-        View on GitHub
+        <span class="icon">★</span> Contribute on GitHub
       </a>
     </div>
   </header>
@@ -446,100 +554,81 @@
   <main class="page">
     <section class="intro">
       <p>
-        This is an independent, modernized take on the classic Security
-        Certification Roadmap. Layout and idea are heavily inspired by
-        <a
-          href="https://www.pauljerimy.com/security-certification-roadmap/"
-          target="_blank"
-          rel="noopener noreferrer"
-          >Paul Jerimy’s original work</a
-        >, but all ratings and AI additions here are community-maintained and
-        opinionated.
+        <strong>Certification Atlas</strong> is a community-driven map of IT and
+        security certifications. Use it to discover pathways, compare difficulty,
+        and see how others rank each certification’s practical value.
       </p>
-      <p class="intro-note">
-        Want to add or adjust a certificate? Edit the data in the script block
-        at the bottom of this file and send a pull request.
-      </p>
+      <div class="intro-note">
+        <span class="badge">Open Source</span>
+        <span>Add or adjust certifications via pull request – the data lives in a single JavaScript array.</span>
+      </div>
     </section>
 
     <section class="layout">
-      <section class="roadmap-section">
-        <div class="roadmap-header">
-          <h2>Roadmap Grid</h2>
-          <p>
-            Columns = domains • Rows = difficulty • Each pill = certification
-            (click to highlight in the ranking list).
-          </p>
+      <!-- LEFT: Atlas grid -->
+      <section class="panel">
+        <div class="panel-header">
+          <div>
+            <h2>Atlas Grid</h2>
+            <p>Rows = tier • Columns = tracks • Tiny pills = initial codes only.</p>
+          </div>
+          <div class="chip-row">
+            <div class="chip">
+              <span class="dot"></span> Hover or tap for details
+            </div>
+          </div>
         </div>
 
-        <div id="roadmapGrid" class="roadmap-grid"></div>
-
-        <div class="legend">
-          <div>
-            <strong>Color Legend</strong>
-            <ul>
-              <li>
-                <span class="legend-swatch legend-foundations"></span> Core
-                Foundations
-              </li>
-              <li>
-                <span class="legend-swatch legend-blue"></span> Blue Team &amp;
-                DFIR
-              </li>
-              <li>
-                <span class="legend-swatch legend-red"></span> Red Team &amp;
-                Exploit
-              </li>
-              <li>
-                <span class="legend-swatch legend-appsec"></span> AppSec &amp;
-                Code
-              </li>
-              <li>
-                <span class="legend-swatch legend-cloud"></span> Cloud &amp;
-                Zero Trust
-              </li>
-              <li>
-                <span class="legend-swatch legend-management"></span> GRC &amp;
-                Management
-              </li>
-              <li>
-                <span class="legend-swatch legend-ai"></span> AI &amp; ML
-                Security
-              </li>
-            </ul>
+        <div class="atlas-grid-wrapper">
+          <div class="atlas-grid">
+            <div class="atlas-grid-inner" id="atlasGrid">
+              <!-- Populated by JS -->
+            </div>
           </div>
-          <div>
-            <strong>Difficulty Rows</strong>
-            <ul>
-              <li>Intro / Fundamentals</li>
-              <li>Associate / Junior</li>
-              <li>Intermediate</li>
-              <li>Advanced</li>
-              <li>Expert</li>
-            </ul>
+          <div class="atlas-footer">
+            <span>
+              <span class="dot" style="background: var(--track-foundation);"></span> Foundations
+              • <span class="dot" style="background: var(--track-network);"></span> Network
+              • <span class="dot" style="background: var(--track-blue);"></span> Blue
+              • <span class="dot" style="background: var(--track-red);"></span> Red
+              • <span class="dot" style="background: var(--track-cloud);"></span> Cloud
+              • <span class="dot" style="background: var(--track-grc);"></span> GRC
+              • <span class="dot" style="background: var(--track-ai);"></span> AI/ML
+            </span>
+            <span>Initials only on the map – full names stay in the detail panel.</span>
           </div>
         </div>
       </section>
 
+      <!-- RIGHT: Filters & ranking -->
       <aside class="sidebar">
         <section class="panel">
-          <h2>Filters</h2>
-          <label class="field">
-            <span>Search</span>
-            <input
-              id="searchInput"
-              type="search"
-              placeholder="CISSP, OSCP, AI-900…"
-            />
-          </label>
+          <div class="panel-header">
+            <div>
+              <h2>Filters</h2>
+              <p>Slice the atlas by track, rating, or difficulty.</p>
+            </div>
+          </div>
 
-          <label class="field">
-            <span>Track</span>
+          <div class="field">
+            <label for="searchInput">Search by name or code</label>
+            <input id="searchInput" type="search" placeholder="CISSP, OSCP, AI-900…" />
+          </div>
+
+          <div class="field">
+            <label for="trackSelect">Track</label>
             <select id="trackSelect"></select>
-          </label>
+          </div>
 
-          <label class="field">
-            <span>Minimum rating</span>
+          <div class="field">
+            <label for="tierSelect">Tier</label>
+            <select id="tierSelect">
+              <option value="all">All tiers</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="ratingSelect">Minimum community rating</label>
             <select id="ratingSelect">
               <option value="0">Any</option>
               <option value="3">3.0+</option>
@@ -547,347 +636,401 @@
               <option value="4">4.0+</option>
               <option value="4.5">4.5+</option>
             </select>
-          </label>
+          </div>
 
-          <label class="field">
-            <span>Sort ranking by</span>
+          <div class="field">
+            <label for="sortSelect">Sort ranking by</label>
             <select id="sortSelect">
               <option value="rating">Rating (high → low)</option>
               <option value="difficulty">Difficulty (low → high)</option>
               <option value="popularity">Popularity (high → low)</option>
             </select>
-          </label>
+          </div>
 
           <p class="helper">
-            Ratings are community opinions only, not promises of salary or job
-            offers.
+            Ratings are opinionated and community-driven – they’re meant as guidance,
+            not gospel or salary guarantees.
           </p>
         </section>
 
         <section class="panel">
-          <h2>Top Ranked Certifications</h2>
-          <p id="rankingSummary" class="helper"></p>
+          <div class="panel-header">
+            <div>
+              <h2>Ranking</h2>
+              <p id="rankingSummary">Loading certifications…</p>
+            </div>
+          </div>
           <ol id="rankingList" class="ranking-list"></ol>
+
+          <div id="currentCert" class="current-cert" style="display:none;"></div>
         </section>
 
-        <section class="panel small">
-          <h2>Contribute</h2>
+        <section class="panel">
+          <div class="panel-header">
+            <div>
+              <h2>Contribute</h2>
+              <p>Extend the data model – not the layout.</p>
+            </div>
+          </div>
           <p class="helper">
-            Fork the repo, update the cert data in this file, and open a PR.
-            Please include an official link and a short note for each new or
-            changed cert.
+            All certifications live in a single <code>CERTS</code> array in this file.  
+            Add new entries (or port large lists) and submit a pull request – the grid
+            and ranking panel will update automatically.
           </p>
         </section>
       </aside>
     </section>
   </main>
 
-  <footer class="site-footer">
+  <footer class="footer">
     <p>
-      This project is not affiliated with Paul Jerimy. Layout idea credit to
-      him; all modifications and AI content released under your chosen
-      open-source license.
+      Certification Atlas is a community experiment for mapping IT &amp; security
+      certifications. Always verify details with official providers.
     </p>
   </footer>
 
   <script>
-    // ----- tracks and levels -----
+    // ---------- Tracks & tiers (layout model) ----------
+
     const TRACKS = [
-      { id: "foundations", label: "Core Foundations" },
-      { id: "blue", label: "Blue Team & DFIR" },
-      { id: "red", label: "Red Team & Exploit" },
-      { id: "appsec", label: "AppSec & Code" },
-      { id: "cloud", label: "Cloud & Zero Trust" },
-      { id: "management", label: "GRC & Management" },
-      { id: "ai", label: "AI & ML Security" }
+      { id: "foundation", label: "Foundations" },
+      { id: "network", label: "Network / Infra" },
+      { id: "blue", label: "Blue / DFIR" },
+      { id: "red", label: "Red / Offense" },
+      { id: "cloud", label: "Cloud / DevSecOps" },
+      { id: "grc", label: "GRC / Mgmt" },
+      { id: "ai", label: "AI & ML Sec" }
     ];
 
-    const LEVELS = [
-      { id: "intro", label: "Intro / Fundamentals" },
-      { id: "associate", label: "Associate / Junior" },
+    const TIERS = [
+      { id: "starter", label: "Starter" },
+      { id: "associate", label: "Associate" },
       { id: "intermediate", label: "Intermediate" },
       { id: "advanced", label: "Advanced" },
       { id: "expert", label: "Expert" }
     ];
 
-    // ----- cert data -----
+    // ---------- Certification data ----------
+    // NOTE: Seeded with a *small* subset as examples.
+    // To reach ~460+, keep adding objects with the same shape.
+
     const CERTS = [
+      // Foundations
       {
-        id: "secplus",
+        code: "SEC+",
         name: "CompTIA Security+",
         provider: "CompTIA",
-        track: "foundations",
-        level: "intro",
+        track: "foundation",
+        tier: "starter",
         rating: 4.4,
-        difficulty: 2.5,
-        popularity: 4.8,
-        url: "https://www.comptia.org/certifications/security"
+        difficulty: 2.3,
+        popularity: 4.9,
+        url: "https://www.comptia.org/certifications/security",
+        focus: ["general", "baseline"]
       },
       {
-        id: "isc2-cc",
-        name: "ISC2 Certified in Cybersecurity (CC)",
+        code: "CC",
+        name: "Certified in Cybersecurity",
         provider: "ISC2",
-        track: "foundations",
-        level: "intro",
+        track: "foundation",
+        tier: "starter",
         rating: 4.1,
-        difficulty: 2.2,
-        popularity: 4.0,
-        url: "https://www.isc2.org/certifications/cc"
+        difficulty: 2.0,
+        popularity: 4.1,
+        url: "https://www.isc2.org/certifications/cc",
+        focus: ["general", "entry-level"]
       },
       {
-        id: "cysa",
+        code: "NET+",
+        name: "CompTIA Network+",
+        provider: "CompTIA",
+        track: "network",
+        tier: "starter",
+        rating: 4.0,
+        difficulty: 2.2,
+        popularity: 4.2,
+        url: "https://www.comptia.org/certifications/network",
+        focus: ["networking"]
+      },
+
+      // Blue / DFIR
+      {
+        code: "CYSA+",
         name: "CompTIA CySA+",
         provider: "CompTIA",
         track: "blue",
-        level: "associate",
+        tier: "associate",
         rating: 4.0,
-        difficulty: 3.0,
+        difficulty: 3.1,
         popularity: 3.8,
-        url: "https://www.comptia.org/certifications/cybersecurity-analyst"
+        url: "https://www.comptia.org/certifications/cybersecurity-analyst",
+        focus: ["blue-team", "monitoring"]
       },
       {
-        id: "gcfa",
-        name: "GIAC GCFA",
+        code: "GCFA",
+        name: "GIAC Certified Forensic Analyst",
         provider: "GIAC",
         track: "blue",
-        level: "advanced",
+        tier: "advanced",
         rating: 4.6,
-        difficulty: 4.5,
-        popularity: 3.6,
-        url: "https://www.giac.org/certifications/forensic-analyst-gcfa/"
+        difficulty: 4.4,
+        popularity: 3.5,
+        url: "https://www.giac.org/certifications/forensic-analyst-gcfa/",
+        focus: ["dfir", "forensics"]
       },
+
+      // Red / Offense
       {
-        id: "oscp",
-        name: "OSCP",
+        code: "OSCP",
+        name: "Offensive Security Certified Professional",
         provider: "OffSec",
         track: "red",
-        level: "intermediate",
+        tier: "intermediate",
         rating: 4.7,
-        difficulty: 4.4,
+        difficulty: 4.5,
         popularity: 4.9,
-        url: "https://www.offsec.com/certifications/osc-pen-200/"
+        url: "https://www.offsec.com/certifications/osc-pen-200/",
+        focus: ["pentest"]
       },
       {
-        id: "htb-cpts",
-        name: "HTB CPTS",
+        code: "CPTS",
+        name: "Certified Penetration Testing Specialist",
         provider: "Hack The Box",
         track: "red",
-        level: "associate",
-        rating: 4.2,
+        tier: "associate",
+        rating: 4.3,
         difficulty: 3.6,
         popularity: 3.9,
-        url: "https://academy.hackthebox.com/certifications"
+        url: "https://academy.hackthebox.com/certifications",
+        focus: ["pentest"]
+      },
+
+      // Cloud / DevSecOps
+      {
+        code: "AZ-500",
+        name: "Azure Security Engineer Associate",
+        provider: "Microsoft",
+        track: "cloud",
+        tier: "intermediate",
+        rating: 4.2,
+        difficulty: 3.5,
+        popularity: 4.0,
+        url: "https://learn.microsoft.com/credentials/certifications/azure-security-engineer/",
+        focus: ["cloud", "azure"]
       },
       {
-        id: "pdes-devsecops",
-        name: "Certified DevSecOps Professional",
-        provider: "Practical DevSecOps",
-        track: "appsec",
-        level: "intermediate",
-        rating: 4.5,
-        difficulty: 3.7,
-        popularity: 3.7,
-        url: "https://www.practical-devsecops.com/certified-devsecops-professional/"
-      },
-      {
-        id: "aws-security-specialty",
+        code: "SCS",
         name: "AWS Certified Security – Specialty",
         provider: "AWS",
         track: "cloud",
-        level: "advanced",
+        tier: "advanced",
         rating: 4.4,
         difficulty: 4.1,
         popularity: 4.2,
-        url: "https://aws.amazon.com/certification/certified-security-specialty/"
+        url: "https://aws.amazon.com/certification/certified-security-specialty/",
+        focus: ["cloud", "aws"]
       },
       {
-        id: "sc-100",
-        name: "SC-100 Cybersecurity Architect",
-        provider: "Microsoft",
+        code: "CSPM",
+        name: "Certified DevSecOps Professional",
+        provider: "Practical DevSecOps",
         track: "cloud",
-        level: "advanced",
-        rating: 4.3,
+        tier: "advanced",
+        rating: 4.5,
         difficulty: 3.8,
-        popularity: 3.9,
-        url: "https://learn.microsoft.com/credentials/certifications/cybersecurity-architect-expert/"
+        popularity: 3.6,
+        url: "https://www.practical-devsecops.com/certified-devsecops-professional/",
+        focus: ["devsecops"]
       },
+
+      // GRC / Mgmt
       {
-        id: "cissp",
-        name: "CISSP",
+        code: "CISSP",
+        name: "Certified Information Systems Security Professional",
         provider: "ISC2",
-        track: "management",
-        level: "advanced",
+        track: "grc",
+        tier: "advanced",
         rating: 4.9,
         difficulty: 4.3,
         popularity: 5.0,
-        url: "https://www.isc2.org/certifications/cissp"
+        url: "https://www.isc2.org/certifications/cissp",
+        focus: ["management", "architecture"]
       },
       {
-        id: "cism",
-        name: "CISM",
+        code: "CISM",
+        name: "Certified Information Security Manager",
         provider: "ISACA",
-        track: "management",
-        level: "advanced",
+        track: "grc",
+        tier: "advanced",
         rating: 4.6,
         difficulty: 4.0,
-        popularity: 4.5,
-        url: "https://www.isaca.org/credentialing/cism"
+        popularity: 4.4,
+        url: "https://www.isaca.org/credentialing/cism",
+        focus: ["management", "governance"]
       },
       {
-        id: "ai-900",
-        name: "AI-900 Azure AI Fundamentals",
+        code: "CGRC",
+        name: "Certified in Governance, Risk and Compliance",
+        provider: "ISC2",
+        track: "grc",
+        tier: "intermediate",
+        rating: 4.2,
+        difficulty: 3.5,
+        popularity: 3.5,
+        url: "https://www.isc2.org/certifications/cgrc",
+        focus: ["grc"]
+      },
+
+      // AI & ML Security
+      {
+        code: "AI-900",
+        name: "Azure AI Fundamentals",
         provider: "Microsoft",
         track: "ai",
-        level: "intro",
+        tier: "starter",
         rating: 3.9,
         difficulty: 2.0,
         popularity: 3.8,
-        url: "https://learn.microsoft.com/credentials/certifications/azure-ai-fundamentals/"
+        url: "https://learn.microsoft.com/credentials/certifications/azure-ai-fundamentals/",
+        focus: ["ai", "fundamentals"]
       },
       {
-        id: "aws-ml-specialty",
-        name: "AWS Machine Learning – Specialty",
+        code: "MLS",
+        name: "AWS Machine Learning Specialty",
         provider: "AWS",
         track: "ai",
-        level: "advanced",
+        tier: "advanced",
         rating: 4.3,
-        difficulty: 4.4,
+        difficulty: 4.3,
         popularity: 3.7,
-        url: "https://aws.amazon.com/certification/certified-machine-learning-specialty/"
+        url: "https://aws.amazon.com/certification/certified-machine-learning-specialty/",
+        focus: ["ml", "cloud"]
       },
       {
-        id: "pds-ai-sec",
+        code: "AISP",
         name: "Certified AI Security Professional",
         provider: "Practical DevSecOps",
         track: "ai",
-        level: "advanced",
+        tier: "advanced",
         rating: 4.7,
         difficulty: 4.2,
         popularity: 3.5,
-        url: "https://www.practical-devsecops.com/certified-ai-security-professional/"
-      },
-      {
-        id: "isaca-aaism",
-        name: "ISACA AI Security Management",
-        provider: "ISACA",
-        track: "ai",
-        level: "advanced",
-        rating: 4.4,
-        difficulty: 4.0,
-        popularity: 3.4,
-        url: "https://www.isaca.org/credentialing/aaism"
+        url: "https://www.practical-devsecops.com/certified-ai-security-professional/",
+        focus: ["ai-security"]
       }
     ];
+
+    // ---------- State ----------
 
     const state = {
       search: "",
       track: "all",
+      tier: "all",
       minRating: 0,
-      sort: "rating"
+      sort: "rating",
+      current: null
     };
 
-    const gridEl = document.getElementById("roadmapGrid");
+    const atlasGrid = document.getElementById("atlasGrid");
     const rankingListEl = document.getElementById("rankingList");
     const rankingSummaryEl = document.getElementById("rankingSummary");
+    const currentCertEl = document.getElementById("currentCert");
+
     const searchInput = document.getElementById("searchInput");
     const trackSelect = document.getElementById("trackSelect");
+    const tierSelect = document.getElementById("tierSelect");
     const ratingSelect = document.getElementById("ratingSelect");
     const sortSelect = document.getElementById("sortSelect");
     const themeToggle = document.getElementById("themeToggle");
 
-    function buildGridFrame() {
-      gridEl.style.gridTemplateColumns = `minmax(120px, 150px) repeat(${TRACKS.length}, minmax(120px, 1fr))`;
-      gridEl.innerHTML = "";
+    // ---------- Grid building ----------
 
-      const corner = document.createElement("div");
-      corner.className = "grid-level-label";
-      gridEl.appendChild(corner);
+    function buildAtlasFrame() {
+      atlasGrid.innerHTML = "";
 
-      TRACKS.forEach(track => {
-        const header = document.createElement("div");
-        header.className = "grid-track-header";
-        header.textContent = track.label;
-        gridEl.appendChild(header);
-      });
+      // header row
+      atlasGrid.appendChild(headerCell(""));
+      TRACKS.forEach(t => atlasGrid.appendChild(headerCell(t.label)));
 
-      LEVELS.forEach(level => {
+      // tiers + cells
+      TIERS.forEach(tier => {
         const label = document.createElement("div");
-        label.className = "grid-level-label";
-        label.textContent = level.label;
-        gridEl.appendChild(label);
+        label.className = "atlas-row-label";
+        label.textContent = tier.label;
+        atlasGrid.appendChild(label);
 
         TRACKS.forEach(track => {
           const cell = document.createElement("div");
-          cell.className = "grid-cell";
-          cell.dataset.level = level.id;
+          cell.className = "atlas-cell";
+          cell.dataset.tier = tier.id;
           cell.dataset.track = track.id;
-          gridEl.appendChild(cell);
+          atlasGrid.appendChild(cell);
         });
       });
     }
 
-    function placeCerts() {
-      gridEl.querySelectorAll(".cert-pill").forEach(p => p.remove());
+    function headerCell(text) {
+      const div = document.createElement("div");
+      div.className = "atlas-header-cell";
+      div.textContent = text;
+      return div;
+    }
+
+    function placePills() {
+      atlasGrid.querySelectorAll(".pill").forEach(p => p.remove());
 
       CERTS.forEach(cert => {
-        const cell = gridEl.querySelector(
-          `.grid-cell[data-level="${cert.level}"][data-track="${cert.track}"]`
+        const cell = atlasGrid.querySelector(
+          `.atlas-cell[data-t
+ier="${cert.tier}"][data-track="${cert.track}"]`
         );
         if (!cell) return;
 
         const pill = document.createElement("button");
         pill.type = "button";
-        pill.className = "cert-pill";
-        pill.dataset.certId = cert.id;
-        pill.innerHTML = `
-          <span>${cert.name}</span>
-          <small>(${cert.rating.toFixed(1)}★)</small>
-        `;
-        pill.addEventListener("click", () => highlightFromId(cert.id));
-
+        pill.className = "pill";
+        pill.dataset.code = cert.code;
+        pill.dataset.track = cert.track;
+        pill.title = `${cert.code} • ${cert.name} (${cert.provider})`;
+        pill.textContent = cert.code;
+        pill.addEventListener("click", () => selectCert(cert.code));
         cell.appendChild(pill);
       });
     }
 
-    function getFilteredAndSortedCerts() {
-      const { search, track, minRating, sort } = state;
+    // ---------- Ranking & filters ----------
 
-      let list = CERTS.filter(c => {
-        if (track !== "all" && c.track !== track) return false;
-        if (c.rating < minRating) return false;
-        if (search) {
-          const haystack = `${c.name} ${c.provider}`.toLowerCase();
-          if (!haystack.includes(search.toLowerCase())) return false;
+    function filteredCerts() {
+      return CERTS.filter(c => {
+        if (state.track !== "all" && c.track !== state.track) return false;
+        if (state.tier !== "all" && c.tier !== state.tier) return false;
+        if (c.rating < state.minRating) return false;
+        if (state.search) {
+          const h = `${c.code} ${c.name} ${c.provider}`.toLowerCase();
+          if (!h.includes(state.search.toLowerCase())) return false;
         }
         return true;
-      });
-
-      list.sort((a, b) => {
-        if (sort === "difficulty") return a.difficulty - b.difficulty;
-        if (sort === "popularity") return b.popularity - a.popularity;
+      }).sort((a, b) => {
+        if (state.sort === "difficulty") return a.difficulty - b.difficulty;
+        if (state.sort === "popularity") return b.popularity - a.popularity;
         return b.rating - a.rating;
       });
-
-      return list;
     }
 
     function renderRanking() {
-      const list = getFilteredAndSortedCerts();
+      const list = filteredCerts();
       rankingListEl.innerHTML = "";
-
       list.forEach(cert => {
         const li = document.createElement("li");
         li.className = "ranking-item";
-        li.dataset.certId = cert.id;
+        li.dataset.code = cert.code;
         li.innerHTML = `
-          <span class="name">${cert.name}</span>
+          <span class="name">${cert.code}</span>
           <span class="meta">
-            • ${cert.rating.toFixed(1)}★
-            • diff ${cert.difficulty.toFixed(1)}
-            • pop ${cert.popularity.toFixed(1)}
+            ${cert.rating.toFixed(1)}★ • diff ${cert.difficulty.toFixed(1)} • pop ${cert.popularity.toFixed(1)}
           </span>
         `;
-        li.addEventListener("click", () => highlightFromId(cert.id));
+        li.addEventListener("click", () => selectCert(cert.code));
         rankingListEl.appendChild(li);
       });
 
@@ -896,41 +1039,81 @@
       rankingSummaryEl.textContent =
         shown === total
           ? `${shown} certifications listed`
-          : `${shown} of ${total} certifications shown (filters applied)`;
+          : `${shown} of ${total} certifications shown (filters on)`;
     }
 
     function clearHighlights() {
-      document
-        .querySelectorAll(".cert-pill.is-highlighted, .ranking-item.is-active")
-        .forEach(el =>
-          el.classList.remove("is-highlighted", "is-active")
-        );
+      document.querySelectorAll(".pill.is-highlighted").forEach(p => p.classList.remove("is-highlighted"));
+      document.querySelectorAll(".ranking-item.is-active").forEach(li => li.classList.remove("is-active"));
     }
 
-    function highlightFromId(certId) {
+    function selectCert(code) {
+      const cert = CERTS.find(c => c.code === code);
+      if (!cert) return;
+      state.current = cert;
+
       clearHighlights();
-      const pill = document.querySelector(
-        `.cert-pill[data-cert-id="${certId}"]`
-      );
-      const item = document.querySelector(
-        `.ranking-item[data-cert-id="${certId}"]`
-      );
+
+      const pill = document.querySelector(`.pill[data-code="${code}"]`);
+      const item = document.querySelector(`.ranking-item[data-code="${code}"]`);
       if (pill) pill.classList.add("is-highlighted");
       if (item) item.classList.add("is-active");
+
+      currentCertEl.style.display = "block";
+      currentCertEl.innerHTML = `
+        <h3>${cert.name}</h3>
+        <small>${cert.provider}</small><br/>
+        <a href="${cert.url}" target="_blank" rel="noopener noreferrer">${cert.code} – official link</a>
+        <div class="tag-row">
+          <span class="tag">Track: ${trackLabel(cert.track)}</span>
+          <span class="tag">Tier: ${tierLabel(cert.tier)}</span>
+          <span class="tag">Rating: ${cert.rating.toFixed(1)}★</span>
+          <span class="tag">Difficulty: ${cert.difficulty.toFixed(1)}/5</span>
+          <span class="tag">Popularity: ${cert.popularity.toFixed(1)}/5</span>
+          ${
+            cert.focus && cert.focus.length
+              ? `<span class="tag">Focus: ${cert.focus.join(", ")}</span>`
+              : ""
+          }
+        </div>
+      `;
     }
 
-    function initFilters() {
+    function trackLabel(id) {
+      const t = TRACKS.find(t => t.id === id);
+      return t ? t.label : id;
+    }
+
+    function tierLabel(id) {
+      const t = TIERS.find(t => t.id === id);
+      return t ? t.label : id;
+    }
+
+    // ---------- Controls ----------
+
+    function initControls() {
+      // track
       trackSelect.innerHTML =
         '<option value="all">All tracks</option>' +
         TRACKS.map(t => `<option value="${t.id}">${t.label}</option>`).join("");
+
+      // tiers
+      tierSelect.innerHTML =
+        '<option value="all">All tiers</option>' +
+        TIERS.map(t => `<option value="${t.id}">${t.label}</option>`).join("");
 
       trackSelect.addEventListener("change", e => {
         state.track = e.target.value;
         renderRanking();
       });
 
+      tierSelect.addEventListener("change", e => {
+        state.tier = e.target.value;
+        renderRanking();
+      });
+
       ratingSelect.addEventListener("change", e => {
-        state.minRating = parseFloat(e.target.value);
+        state.minRating = parseFloat(e.target.value || "0");
         renderRanking();
       });
 
@@ -945,35 +1128,43 @@
       });
     }
 
+    // ---------- Theme ----------
+
     function initTheme() {
-      const stored = localStorage.getItem("scr-theme");
+      const stored = localStorage.getItem("cert-atlas-theme");
       if (stored === "light" || stored === "dark") {
         document.documentElement.setAttribute("data-theme", stored);
       }
       updateThemeButton();
 
       themeToggle.addEventListener("click", () => {
-        const cur =
-          document.documentElement.getAttribute("data-theme") || "dark";
+        const cur = document.documentElement.getAttribute("data-theme") || "dark";
         const next = cur === "dark" ? "light" : "dark";
         document.documentElement.setAttribute("data-theme", next);
-        localStorage.setItem("scr-theme", next);
+        localStorage.setItem("cert-atlas-theme", next);
         updateThemeButton();
       });
     }
 
     function updateThemeButton() {
-      const cur =
-        document.documentElement.getAttribute("data-theme") || "dark";
-      themeToggle.textContent = cur === "dark" ? "Dark" : "Light";
+      const cur = document.documentElement.getAttribute("data-theme") || "dark";
+      themeToggle.innerHTML =
+        cur === "dark"
+          ? '<span class="icon">☾</span> Theme'
+          : '<span class="icon">☼</span> Theme';
     }
 
-    // init
-    buildGridFrame();
-    placeCerts();
-    initFilters();
+    // ---------- Init ----------
+
+    buildAtlasFrame();
+    placePills();
+    initControls();
     renderRanking();
     initTheme();
+
+    // Auto-select highest rated cert as example
+    const top = [...CERTS].sort((a, b) => b.rating - a.rating)[0];
+    if (top) selectCert(top.code);
   </script>
 </body>
 </html>
