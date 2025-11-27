@@ -701,9 +701,7 @@
       { id: "expert", label: "Expert" }
     ];
 
-    // ---------- Certification data ----------
-    // Seeded with a subset as examples.
-    // To reach ~460+, keep adding objects with the same shape.
+    // ---------- Certification data (sample subset) ----------
 
     const CERTS = [
       // Foundations
@@ -972,8 +970,7 @@
 
       CERTS.forEach(cert => {
         const cell = atlasGrid.querySelector(
-          `.atlas-cell[data-t
-ier="${cert.tier}"][data-track="${cert.track}"]`
+          `.atlas-cell[data-tier="${cert.tier}"][data-track="${cert.track}"]`
         );
         if (!cell) return;
 
