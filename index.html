@@ -2,11 +2,11 @@
 <html lang="en" data-theme="dark">
 <head>
   <meta charset="UTF-8" />
-  <title>IT & Security Certification Atlas</title>
+  <title>Certification Atlas – IT & Security Certifications</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta
     name="description"
-    content="Interactive atlas of IT and security certifications with ratings, difficulty tiers, and an AI & ML security track."
+    content="Interactive atlas of IT and security certifications with tiny initial-only pills, ratings, difficulty tiers, and an AI & ML security track."
   />
   <style>
     :root {
@@ -190,7 +190,7 @@
       margin-top: 16px;
     }
 
-    /* Atlas panel */
+    /* Panels */
 
     .panel {
       background: radial-gradient(circle at top left, rgba(148, 163, 184, 0.2), transparent 40%),
@@ -247,7 +247,7 @@
       background: #22c55e;
     }
 
-    /* Grid */
+    /* Atlas grid */
 
     .atlas-grid-wrapper {
       margin-top: 8px;
@@ -257,11 +257,16 @@
       overflow: hidden;
     }
 
+    .atlas-grid-scroller {
+      overflow-x: auto;
+    }
+
     .atlas-grid {
       display: grid;
       grid-template-columns: minmax(90px, 120px) repeat(6, minmax(80px, 1fr));
       font-size: 0.7rem;
       border-bottom: 1px solid rgba(31, 41, 55, 0.7);
+      min-width: 620px;
     }
 
     .atlas-header-cell {
@@ -495,18 +500,6 @@
       .layout {
         grid-template-columns: minmax(0, 1fr);
       }
-
-      .atlas-grid {
-        overflow-x: auto;
-        display: block;
-        white-space: nowrap;
-      }
-
-      .atlas-grid-inner {
-        display: grid;
-        grid-template-columns: minmax(90px, 120px) repeat(6, minmax(80px, 1fr));
-        min-width: 620px;
-      }
     }
 
     @media (max-width: 640px) {
@@ -527,7 +520,6 @@
   </style>
 </head>
 <body>
-  <!-- Data model structure is compatible with importing larger external cert lists later. -->
   <header class="site-header">
     <div class="brand">
       <div class="brand-mark">CA</div>
@@ -574,14 +566,14 @@
           </div>
           <div class="chip-row">
             <div class="chip">
-              <span class="dot"></span> Hover or tap for details
+              <span class="dot"></span> Tap / click a pill for details
             </div>
           </div>
         </div>
 
         <div class="atlas-grid-wrapper">
-          <div class="atlas-grid">
-            <div class="atlas-grid-inner" id="atlasGrid">
+          <div class="atlas-grid-scroller">
+            <div class="atlas-grid" id="atlasGrid">
               <!-- Populated by JS -->
             </div>
           </div>
@@ -595,7 +587,7 @@
               • <span class="dot" style="background: var(--track-grc);"></span> GRC
               • <span class="dot" style="background: var(--track-ai);"></span> AI/ML
             </span>
-            <span>Initials only on the map – full names stay in the detail panel.</span>
+            <span>Initials only on the map – full names live in the detail panel.</span>
           </div>
         </div>
       </section>
@@ -606,7 +598,7 @@
           <div class="panel-header">
             <div>
               <h2>Filters</h2>
-              <p>Slice the atlas by track, rating, or difficulty.</p>
+              <p>Slice the atlas by track, tier, rating, or difficulty.</p>
             </div>
           </div>
 
@@ -648,8 +640,7 @@
           </div>
 
           <p class="helper">
-            Ratings are opinionated and community-driven – they’re meant as guidance,
-            not gospel or salary guarantees.
+            Ratings are opinionated and community-driven – guidance only, not guarantees.
           </p>
         </section>
 
@@ -669,11 +660,11 @@
           <div class="panel-header">
             <div>
               <h2>Contribute</h2>
-              <p>Extend the data model – not the layout.</p>
+              <p>Extend the data, not the layout.</p>
             </div>
           </div>
           <p class="helper">
-            All certifications live in a single <code>CERTS</code> array in this file.  
+            All certifications live in a single <code>CERTS</code> array in this file.
             Add new entries (or port large lists) and submit a pull request – the grid
             and ranking panel will update automatically.
           </p>
@@ -711,7 +702,7 @@
     ];
 
     // ---------- Certification data ----------
-    // NOTE: Seeded with a *small* subset as examples.
+    // Seeded with a subset as examples.
     // To reach ~460+, keep adding objects with the same shape.
 
     const CERTS = [
@@ -945,6 +936,13 @@
 
     // ---------- Grid building ----------
 
+    function headerCell(text) {
+      const div = document.createElement("div");
+      div.className = "atlas-header-cell";
+      div.textContent = text;
+      return div;
+    }
+
     function buildAtlasFrame() {
       atlasGrid.innerHTML = "";
 
@@ -967,13 +965,6 @@
           atlasGrid.appendChild(cell);
         });
       });
-    }
-
-    function headerCell(text) {
-      const div = document.createElement("div");
-      div.className = "atlas-header-cell";
-      div.textContent = text;
-      return div;
     }
 
     function placePills() {
@@ -1047,6 +1038,16 @@ ier="${cert.tier}"][data-track="${cert.track}"]`
       document.querySelectorAll(".ranking-item.is-active").forEach(li => li.classList.remove("is-active"));
     }
 
+    function trackLabel(id) {
+      const t = TRACKS.find(t => t.id === id);
+      return t ? t.label : id;
+    }
+
+    function tierLabel(id) {
+      const t = TIERS.find(t => t.id === id);
+      return t ? t.label : id;
+    }
+
     function selectCert(code) {
       const cert = CERTS.find(c => c.code === code);
       if (!cert) return;
@@ -1079,25 +1080,13 @@ ier="${cert.tier}"][data-track="${cert.track}"]`
       `;
     }
 
-    function trackLabel(id) {
-      const t = TRACKS.find(t => t.id === id);
-      return t ? t.label : id;
-    }
-
-    function tierLabel(id) {
-      const t = TIERS.find(t => t.id === id);
-      return t ? t.label : id;
-    }
-
     // ---------- Controls ----------
 
     function initControls() {
-      // track
       trackSelect.innerHTML =
         '<option value="all">All tracks</option>' +
         TRACKS.map(t => `<option value="${t.id}">${t.label}</option>`).join("");
 
-      // tiers
       tierSelect.innerHTML =
         '<option value="all">All tiers</option>' +
         TIERS.map(t => `<option value="${t.id}">${t.label}</option>`).join("");
